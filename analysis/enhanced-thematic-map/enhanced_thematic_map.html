@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Enhanced Thematic Map — Strategy Diagram with Cluster Interpretation</title>
+<style>
+  :root{
+    --bg:#f4f7fb; --card:#ffffff; --ink:#1d2733; --muted:#5b6b7c; --line:#e3e9f0;
+    --motor:#d76a78; --niche:#5d9e63; --basic:#5f93c4; --emerg:#9678ad;
+    --shadow:0 1px 2px rgba(16,32,48,.06),0 8px 24px rgba(16,32,48,.08);
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);
+       font:15px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Roboto,"Helvetica Neue",Arial,sans-serif;}
+  header.hero{padding:34px 22px 10px;max-width:1080px;margin:0 auto;}
+  .eyebrow{letter-spacing:.14em;text-transform:uppercase;font-size:11.5px;font-weight:700;color:#3c7d9c;}
+  h1{font-size:29px;line-height:1.2;margin:6px 0 8px;letter-spacing:-.01em;}
+  .sub{color:var(--muted);max-width:70ch;margin:0 0 14px;}
+  .chips{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 6px;}
+  .chip{background:#e8f0f6;color:#28536b;border:1px solid #d3e2ec;border-radius:999px;
+        padding:3px 11px;font-size:12px;font-weight:600;}
+  main{max-width:1080px;margin:0 auto;padding:10px 22px 60px;}
+  section.card{background:var(--card);border:1px solid var(--line);border-radius:16px;
+               box-shadow:var(--shadow);padding:22px 24px;margin:22px 0;}
+  h2{font-size:19px;margin:0 0 4px;}
+  h3{font-size:15px;margin:18px 0 6px;}
+  .hint{color:var(--muted);font-size:13px;margin:2px 0 12px;}
+  .chart-head{display:flex;justify-content:space-between;align-items:flex-start;gap:14px;flex-wrap:wrap;}
+  .btns{display:flex;gap:8px;}
+  button{cursor:pointer;border:1px solid #cfdbe6;background:#f2f7fb;color:#28536b;border-radius:9px;
+         padding:7px 12px;font-size:12.5px;font-weight:600;}
+  button:hover{background:#e6eff6}
+  #chartwrap{position:relative;margin-top:6px;}
+  svg{display:block;width:100%;height:auto;}
+  .legend{display:flex;align-items:center;gap:22px;flex-wrap:wrap;color:var(--muted);
+          font-size:12.5px;margin-top:8px;padding:0 6px;}
+  .legend .item{display:flex;align-items:center;gap:8px;}
+  #tip{position:fixed;pointer-events:none;z-index:50;background:#101c28f2;color:#f2f6fa;
+       border-radius:10px;padding:10px 13px;font-size:12.5px;line-height:1.45;max-width:290px;
+       box-shadow:0 8px 26px rgba(0,0,0,.28);opacity:0;transition:opacity .12s;}
+  #tip b{font-size:13px}
+  #tip .q{display:inline-block;margin-top:4px;padding:1px 8px;border-radius:999px;font-size:11px;font-weight:700;}
+  .guide{display:grid;grid-template-columns:repeat(auto-fit,minmax(215px,1fr));gap:12px;margin-top:10px;}
+  .gq{border:1px solid var(--line);border-left-width:5px;border-radius:12px;padding:12px 14px;background:#fbfdfe;}
+  .gq .t{font-weight:800;font-size:13px;letter-spacing:.03em;}
+  .gq .d{color:var(--muted);font-size:12.5px;margin-top:3px;}
+  .cards{display:grid;grid-template-columns:1fr;gap:16px;margin-top:14px;}
+  .ccard{border:1px solid var(--line);border-radius:14px;overflow:hidden;background:#fff;transition:box-shadow .3s;}
+  .ccard .top{padding:13px 18px;color:#fff;display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;}
+  .ccard .top .name{font-weight:800;font-size:15.5px;}
+  .ccard .top .quad{font-size:11px;font-weight:800;letter-spacing:.09em;background:#ffffff2e;border:1px solid #ffffff55;
+                    padding:3px 10px;border-radius:999px;text-transform:uppercase;}
+  .ccard .body{padding:14px 18px 16px;}
+  .stats{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 10px;}
+  .stat{background:#f1f5f9;border:1px solid #e2e9f0;border-radius:8px;padding:3px 10px;font-size:12px;color:#33475c;}
+  .stat b{color:#16202c}
+  .ccard p{margin:8px 0;font-size:14px;}
+  .ccard .lbl{font-weight:800;font-size:11.5px;letter-spacing:.08em;text-transform:uppercase;color:#7b8a99;}
+  .flash{box-shadow:0 0 0 3px #ffc86888, var(--shadow);}
+  table{border-collapse:collapse;width:100%;font-size:13.5px;margin-top:8px;}
+  th,td{border-bottom:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top;}
+  th{background:#f6f9fc;font-size:12px;letter-spacing:.05em;text-transform:uppercase;color:#51637a;}
+  td.num{font-variant-numeric:tabular-nums;white-space:nowrap;}
+  ul{margin:8px 0;padding-left:20px} li{margin:5px 0}
+  footer{color:#8494a5;font-size:12.5px;max-width:1080px;margin:0 auto;padding:0 22px 46px;}
+  .kw{font-style:italic;color:#41556b}
+</style>
+</head>
+<body>
+<header class="hero">
+  <div class="eyebrow">Science mapping · strategic diagram</div>
+  <h1>Thematic Map, Enhanced</h1>
+  <p class="sub">The biblioshiny thematic map of your keyword clusters — rebuilt with readable quadrants,
+     exact hover statistics, a size legend and a full interpretation of every cluster.</p>
+  <div class="chips">
+    <span class="chip">4 clusters</span>
+    <span class="chip">Co-occurrence network · Index Keywords (Scopus)</span>
+    <span class="chip">Positions digitised from your biblioshiny map</span>
+    <span class="chip">2026-10-27</span>
+  </div>
+</header>
+
+<main>
+  <!-- ============ CHART ============ -->
+  <section class="card">
+    <div class="chart-head">
+      <div>
+        <h2>Strategy diagram (centrality × density)</h2>
+        <p class="hint">Hover a bubble for its statistics · click a bubble to jump to its interpretation ·
+           bubble area ∝ share of the mapped keyword mass.</p>
+      </div>
+      <div class="btns">
+        <button id="dlpng">⬇ PNG</button>
+        <button id="dlsvg">⬇ SVG</button>
+      </div>
+    </div>
+    <div id="chartwrap"><svg id="map" viewBox="0 0 980 660" role="img"
+         aria-label="Thematic map: four keyword clusters placed by centrality and density"></svg></div>
+    <div class="legend" id="legend"></div>
+  </section>
+
+  <!-- ============ HOW TO READ ============ -->
+  <section class="card">
+    <h2>How to read the map</h2>
+    <p class="hint">Each cluster of co-occurring keywords is scored on two dimensions (Cobo et&nbsp;al., 2011):
+       <b>centrality</b> — how strongly the theme interacts with the rest of the field (relevance), and
+       <b>density</b> — how cohesive and developed the theme is internally (development).
+       The dashed cross marks the mean of the two scores; the four quadrants give the classic reading.</p>
+    <div class="guide">
+      <div class="gq" style="border-left-color:var(--motor)"><div class="t" style="color:var(--motor)">MOTOR THEMES ↗</div>
+        <div class="d">High centrality, high density. Well developed and central: the themes that drive and structure the research field.</div></div>
+      <div class="gq" style="border-left-color:var(--niche)"><div class="t" style="color:var(--niche)">NICHE THEMES ↖</div>
+        <div class="d">High density, low centrality. Internally mature but peripheral: specialised sub-fields with their own methods and vocabulary.</div></div>
+      <div class="gq" style="border-left-color:var(--basic)"><div class="t" style="color:var(--basic)">BASIC THEMES ↘</div>
+        <div class="d">High centrality, low density. Transversal, cross-cutting foundations: important everywhere but not yet a coherent sub-literature.</div></div>
+      <div class="gq" style="border-left-color:var(--emerg)"><div class="t" style="color:var(--emerg)">EMERGING / DECLINING ↙</div>
+        <div class="d">Low on both. Margin of the field: either an embryonic research front or a fading topic — time-series analysis tells which.</div></div>
+    </div>
+  </section>
+
+  <!-- ============ INTERPRETATION ============ -->
+  <section class="card">
+    <h2>Cluster-by-cluster interpretation</h2>
+    <p class="hint">Statistics are read off your map (centred relative units: 0 = the dashed median cross;
+       weight = bubble-area share of the four mapped themes).</p>
+    <div class="cards" id="cards"></div>
+  </section>
+
+  <!-- ============ SYNTHESIS ============ -->
+  <section class="card">
+    <h2>Synthesis: the shape of this research field</h2>
+    <p>The field shows a clear <b>core–periphery structure</b>. A single dominant motor theme —
+       <span class="kw">human · health care quality · humans</span> — carries almost half of the mapped keyword mass
+       and sits high on both centrality and density: this literature is mature <i>and</i> it is the hub everything
+       connects to. Around it orbit (i) a methodologically mature but peripheral
+       <b>outcome niche</b> (<span class="kw">mortality · time factor · time factors</span>), (ii) a large
+       <b>transversal descriptor layer</b> (<span class="kw">article · female · male</span>) that glues studies together
+       without forming a theory of its own, and (iii) a marginal <b>implementation cluster</b>
+       (<span class="kw">practice guideline · protocol compliance · clinical practice</span>) at the emerging/declining
+       margin. In plain language: the community knows <i>that</i> care quality matters and measures it in humans,
+       has strong tools for time-to-event outcomes, reports sex-demographics routinely — but the question that
+       arguably matters most for patients, <i>whether practice actually follows guidelines</i>, is still outside the core.</p>
+    <h3>Recommendations</h3>
+    <ul>
+      <li><b>Bridge the niche to the core.</b> The highest-value gap is between the mortality/time-factor niche and the
+          health-care-quality motor: studies linking time-to-event outcomes to quality-improvement frameworks connect a
+          mature method to the field's centre of gravity.</li>
+      <li><b>Test the guideline cluster over time before naming it.</b> Its position (low centrality, low density, tiny bubble)
+          fits both “emerging” and “declining”. Run <code>thematicEvolution()</code> in bibliometrix (or split the corpus in two
+          periods): rising centrality would mark it as the field's next frontier — the known guideline-to-practice “care gap”.</li>
+      <li><b>Treat female/male/article as covariates, not as a theme.</b> Their high centrality with low density is the signature of
+          indexing descriptors shared by all studies. Watch whether their density grows: that would signal a maturing
+          sex/gender-equity research front.</li>
+      <li><b>Monitor the motor for saturation.</b> A motor theme whose density plateaus while new terms accumulate elsewhere is a
+          field preparing to shift; periodic re-mapping (e.g. every 2–3 publication years) makes the shift visible early.</li>
+      <li><b>Replace the digitised values with exact ones.</b> Re-run the companion script
+          <code>enhanced_thematic_map.R</code> on your Scopus export to obtain exact centrality, density and cluster cardinalities.</li>
+    </ul>
+  </section>
+
+  <!-- ============ DATA + METHODS ============ -->
+  <section class="card">
+    <h2>Cluster data (as digitised from your map)</h2>
+    <table id="datatable">
+      <thead><tr><th>Cluster</th><th>Top keywords</th><th>Quadrant</th>
+        <th>Centrality (rel.)</th><th>Density (rel.)</th><th>Weight</th></tr></thead>
+      <tbody></tbody>
+    </table>
+    <h3>Methods &amp; caveats</h3>
+    <ul>
+      <li>Framework: strategic diagram of Cobo et&nbsp;al. (2011); implementation: <code>thematicMap()</code> of the
+          <b>bibliometrix</b> R package (Aria &amp; Cuccurullo, 2017; Aria et&nbsp;al., 2026), as served by biblioshiny.</li>
+      <li>Bubble centres, radii and the median cross were extracted pixel-exactly from your screenshot by colour-blob detection;
+          coordinates are expressed in centred relative units (0 = median cross, ±1 = panel edge). Quadrant membership is
+          unambiguous because all four clusters sit deep inside their quadrants.</li>
+      <li>Weights are bubble-area shares (a proxy for theme size; bibliometrix scales radius by log-frequency).
+          Exact frequencies, centrality and density values require re-running the analysis on the source file —
+          use <code>enhanced_thematic_map.R</code> in this folder with your Scopus export.</li>
+      <li>The watermark logo overlapping the original screenshot's lower-right corner was detected and excluded;
+          it is not a cluster.</li>
+    </ul>
+  </section>
+</main>
+<footer>Enhanced thematic map · generated 2026-10-27 · companion scripts: enhanced_thematic_map.R, CLUSTER_INTERPRETATION.md</footer>
+<div id="tip"></div>
+
+<script>
+const CL = [
+ {id:'C1', name:'Humans & Health Care Quality', words:['human','health care quality','humans'],
+  x:0.745, y:0.250, w:43.7, size:'dominant', q:'motor',
+  color:'#d76a78', fill:'#f2ced2',
+  reading:'Upper-right quadrant: centrality and density both above the median cross (+0.75 / +0.25), and by far the largest bubble (≈44% of the mapped keyword mass). High centrality means its keywords co-occur with many other themes; high density means the cluster is internally cohesive, with a developed conceptual core.',
+  meaning:'This is the engine of the literature. Framing health-care quality around human subjects/patients is simultaneously the most connected and the most mature theme — shared definitions, accumulated evidence, dense internal debate. In Cobo et al.’s vocabulary it is a textbook motor theme: it drives the field and is well developed.',
+  next:'Monitor it for saturation (is density still rising?) and open the black box: which quality dimensions — safety, effectiveness, timeliness, patient experience — carry the cluster? A per-year overlay shows whether the motor is stable or shifting.'},
+ {id:'C2', name:'Mortality & Time Factors', words:['mortality','time factor','time factors'],
+  x:-0.244, y:0.747, w:16.6, size:'moderate', q:'niche',
+  color:'#5d9e63', fill:'#cfe3cf',
+  reading:'Upper-left quadrant: the highest density on the map (+0.75) with below-median centrality (−0.24), and a mid-sized bubble (≈17%).',
+  meaning:'A specialised, methodologically mature sub-field: mortality endpoints, follow-up duration, timing of care — the time-to-event toolkit. Its internal ties are strong (own measures, own study designs) but it exchanges little with the health-care-quality core: a true niche, well developed yet peripheral to the field’s centre of gravity.',
+  next:'Bridging work is the high-value move here: connect mortality / time-to-event endpoints to quality-improvement frameworks and the niche’s rigour feeds the motor. If your own question is outcome measurement, this cluster is where the rigorous evidence base lives.'},
+ {id:'C3', name:'Practice Guidelines & Protocol Compliance', words:['practice guideline','protocol compliance','clinical practice'],
+  x:-0.745, y:-0.250, w:1.4, size:'marginal', q:'emerging',
+  color:'#9678ad', fill:'#ddd0e4',
+  reading:'Lower-left quadrant: below the median on both axes (−0.75 / −0.25) and the smallest bubble on the map (≈1% of the mapped mass).',
+  meaning:'The implementation-science angle — adherence to practice guidelines, protocol compliance in routine clinical practice — is present but marginal: few documents, weak internal structure, weak links to the rest. Two readings are possible: an embryonic emerging front, or a fading topic. A static map cannot separate them.',
+  next:'Decide with time: run thematicEvolution() or split the corpus into two periods. Rising centrality would identify this as the field’s clearest opportunity space — the well-known “care gap” between what guidelines recommend and what practice delivers. Falling centrality would relegate it to background.'},
+ {id:'C4', name:'Sex & Study-Type Descriptors', words:['article','female','male'],
+  x:0.249, y:-0.747, w:29.6, size:'large', q:'basic',
+  color:'#5f93c4', fill:'#cfdde9',
+  reading:'Lower-right quadrant: above-median centrality (+0.25) with the lowest density on the map (−0.75), and the second-largest bubble (≈30%).',
+  meaning:'Transversal foundations rather than a coherent sub-literature. Sex/demographic descriptors (female, male) and publication-type tags (article) appear across nearly every study — hence high centrality — but no developed theory binds them — hence low density. Practically: the field routinely reports sex-disaggregated samples without yet having built a cohesive “sex/gender differences in care quality” literature.',
+  next:'Treat these terms as cross-cutting covariates when you read or design studies. Keep an eye on density: a rising density here would mark the maturation of a gender-equity research front within quality-of-care research.'}
+];
+const QUAD = {
+  motor:{t:'MOTOR THEMES', s:'well developed & driving the field', c:'#d76a78', bg:'#d76a7812'},
+  niche:{t:'NICHE THEMES', s:'well developed, peripheral specialties', c:'#5d9e63', bg:'#5d9e6312'},
+  emerging:{t:'EMERGING OR DECLINING', s:'margin of the field — frontier or fading', c:'#9678ad', bg:'#9678ad12'},
+  basic:{t:'BASIC THEMES', s:'transversal, still undeveloped', c:'#5f93c4', bg:'#5f93c412'}
+};
+const QNAME = {motor:'Motor theme', niche:'Niche theme', basic:'Basic theme', emerging:'Emerging / declining'};
+
+/* ---------- geometry ---------- */
+const W=980,H=660,M={l:78,r:26,t:26,b:72},PW=W-M.l-M.r,PH=H-M.t-M.b,DOM=1.12;
+const X=v=>M.l+(v+DOM)/(2*DOM)*PW, Y=v=>M.t+(DOM-v)/(2*DOM)*PH;
+const R=w=>7+Math.sqrt(w)*5.5;
+const NS='http://www.w3.org/2000/svg';
+const el=(n,at,parent)=>{const e=document.createElementNS(NS,n);for(const k in at)e.setAttribute(k,at[k]);if(parent)parent.appendChild(e);return e;};
+const svg=document.getElementById('map');
+
+/* panel + quadrant tints */
+el('rect',{x:M.l,y:M.t,width:PW,height:PH,fill:'#fbfdff',stroke:'#dfe7ee'},svg);
+el('rect',{x:X(0),y:M.t,width:M.l+PW-X(0),height:Y(0)-M.t,fill:QUAD.motor.bg},svg);
+el('rect',{x:M.l,y:M.t,width:X(0)-M.l,height:Y(0)-M.t,fill:QUAD.niche.bg},svg);
+el('rect',{x:M.l,y:Y(0),width:X(0)-M.l,height:M.t+PH-Y(0),fill:QUAD.emerging.bg},svg);
+el('rect',{x:X(0),y:Y(0),width:M.l+PW-X(0),height:M.t+PH-Y(0),fill:QUAD.basic.bg},svg);
+
+/* faint grid + ticks */
+[-1,-0.5,0.5,1].forEach(v=>{
+  el('line',{x1:X(v),y1:M.t,x2:X(v),y2:M.t+PH,stroke:'#e8eef4','stroke-width':1},svg);
+  el('line',{x1:M.l,y1:Y(v),x2:M.l+PW,y2:Y(v),stroke:'#e8eef4','stroke-width':1},svg);
+});
+[-1,-0.5,0,0.5,1].forEach(v=>{
+  const tx=el('text',{x:X(v),y:M.t+PH+18,'text-anchor':'middle','font-size':11,fill:'#93a3b3'},svg);
+  tx.textContent=(v>0?'+':'')+v.toFixed(1);
+  const ty=el('text',{x:M.l-9,y:Y(v)+4,'text-anchor':'end','font-size':11,fill:'#93a3b3'},svg);
+  ty.textContent=(v>0?'+':'')+v.toFixed(1);
+});
+
+/* median cross */
+el('line',{x1:M.l,y1:Y(0),x2:M.l+PW,y2:Y(0),stroke:'#68798c','stroke-width':1.4,'stroke-dasharray':'7 6'},svg);
+el('line',{x1:X(0),y1:M.t,x2:X(0),y2:M.t+PH,stroke:'#68798c','stroke-width':1.4,'stroke-dasharray':'7 6'},svg);
+let mt=el('text',{x:M.l+PW-6,y:Y(0)-7,'text-anchor':'end','font-size':10.5,fill:'#7d8ea0','font-style':'italic'},svg);
+mt.textContent='median density';
+mt=el('text',{x:X(0)+7,y:M.t+14,'font-size':10.5,fill:'#7d8ea0','font-style':'italic'},svg);
+mt.textContent='median centrality';
+
+/* quadrant corner labels */
+function corner(q,x,y,ax,ay){
+  const t1=el('text',{x:x,y:y,'text-anchor':ax,'font-size':14.5,'font-weight':800,fill:QUAD[q].c,opacity:.85,'letter-spacing':'1.5'},svg);
+  t1.textContent=QUAD[q].t;
+  const t2=el('text',{x:x,y:y+17,'text-anchor':ax,'font-size':11.5,fill:'#8b9aa9'},svg);
+  t2.textContent=QUAD[q].s;
+}
+corner('niche',M.l+16,M.t+26,'start');
+corner('motor',M.l+PW-16,M.t+26,'end');
+corner('emerging',M.l+16,M.t+PH-30,'start');
+corner('basic',M.l+PW-16,M.t+PH-30,'end');
+
+/* axis titles */
+let at=el('text',{x:M.l+PW/2,y:H-26,'text-anchor':'middle','font-size':14,'font-weight':700,fill:'#33475c'},svg);
+at.textContent='Relevance degree (Centrality) — centred relative units';
+at=el('text',{x:24,y:M.t+PH/2,'text-anchor':'middle','font-size':14,'font-weight':700,fill:'#33475c',
+   transform:`rotate(-90 24 ${M.t+PH/2})`},svg);
+at.textContent='Development degree (Density) — centred relative units';
+
+/* bubbles + labels */
+const LAB={C1:{anchor:'end',side:-1},C2:{anchor:'start',side:1},C3:{anchor:'start',side:1},C4:{anchor:'end',side:-1}};
+const tip=document.getElementById('tip');
+CL.forEach(c=>{
+  const r=R(c.w), cx=X(c.x), cy=Y(c.y), L=LAB[c.id];
+  const g=el('g',{style:'cursor:pointer'},svg);
+  el('circle',{cx:cx,cy:cy,r:r,fill:c.fill,'fill-opacity':.92,stroke:c.color,'stroke-width':2},g);
+  el('circle',{cx:cx,cy:cy,r:Math.max(2,r*.16),fill:c.color,opacity:.55},g);
+  /* leader + word label */
+  const lx=cx+L.side*(r+4), lx2=cx+L.side*(r+13);
+  el('line',{x1:lx,y1:cy,x2:lx2,y2:cy,stroke:c.color,'stroke-width':1.3,opacity:.8},g);
+  c.words.forEach((w,i)=>{
+    const t=el('text',{x:lx2+L.side*5,y:cy-15+i*16,'text-anchor':L.anchor,'font-size':13,'font-weight':600,
+       fill:'#2c3e50',stroke:'#fbfdff','stroke-width':3,'paint-order':'stroke'},g);
+    t.textContent=w;
+  });
+  g.addEventListener('mousemove',ev=>{
+    tip.innerHTML=`<b>${c.name}</b><br><span class="kw">${c.words.join(' · ')}</span><br>
+      Centrality ${fmt(c.x)} · Density ${fmt(c.y)}<br>Weight ${c.w}% of mapped mass (${c.size})<br>
+      <span class="q" style="background:${c.color};color:#fff">${QNAME[c.q]}</span>`;
+    tip.style.opacity=1;
+    tip.style.left=Math.min(ev.clientX+16,innerWidth-300)+'px';
+    tip.style.top=Math.min(ev.clientY+14,innerHeight-130)+'px';
+  });
+  g.addEventListener('mouseleave',()=>tip.style.opacity=0);
+  g.addEventListener('click',()=>{
+    const card=document.getElementById('card-'+c.id);
+    card.scrollIntoView({behavior:'smooth',block:'center'});
+    card.classList.add('flash'); setTimeout(()=>card.classList.remove('flash'),1600);
+  });
+});
+function fmt(v){return (v>0?'+':'')+v.toFixed(2);}
+
+/* legend (size) */
+const leg=document.getElementById('legend');
+leg.innerHTML='<span style="font-weight:700;color:#41556b">Bubble size</span>'+
+  [2,15,45].map(w=>{const r=R(w)*.5;
+    return `<span class="item"><svg width="${r*2+4}" height="${r*2+4}" viewBox="0 0 ${r*2+4} ${r*2+4}">
+      <circle cx="${r+2}" cy="${r+2}" r="${r}" fill="#c6d4e0" fill-opacity=".7" stroke="#8fa5b8"/></svg>
+      weight ${w}%</span>`;}).join('')+
+  '<span style="margin-left:auto">Dashed cross = mean centrality / mean density · quadrant tints encode the classic reading</span>';
+
+/* interpretation cards */
+document.getElementById('cards').innerHTML=CL.map(c=>`
+ <div class="ccard" id="card-${c.id}">
+   <div class="top" style="background:${c.color}">
+     <span class="name">${c.id} · ${c.name}</span>
+     <span class="quad">${QNAME[c.q]}</span>
+   </div>
+   <div class="body">
+     <div class="stats">
+       <span class="stat">Keywords: <b class="kw">${c.words.join(', ')}</b></span>
+       <span class="stat">Centrality <b>${fmt(c.x)}</b></span>
+       <span class="stat">Density <b>${fmt(c.y)}</b></span>
+       <span class="stat">Weight <b>${c.w}%</b> (${c.size})</span>
+     </div>
+     <div class="lbl">What the map shows</div><p>${c.reading}</p>
+     <div class="lbl">Interpretation</div><p>${c.meaning}</p>
+     <div class="lbl">What to do with it</div><p>${c.next}</p>
+   </div>
+ </div>`).join('');
+
+/* data table */
+document.querySelector('#datatable tbody').innerHTML=CL.map(c=>`
+ <tr><td><b>${c.id}</b> ${c.name}</td><td class="kw">${c.words.join(', ')}</td>
+ <td><span style="color:${c.color};font-weight:700">${QNAME[c.q]}</span></td>
+ <td class="num">${fmt(c.x)}</td><td class="num">${fmt(c.y)}</td><td class="num">${c.w}%</td></tr>`).join('');
+
+/* export buttons */
+function svgSource(){
+  const clone=svg.cloneNode(true);
+  clone.setAttribute('xmlns',NS); clone.setAttribute('width',W); clone.setAttribute('height',H);
+  const bg=document.createElementNS(NS,'rect');
+  bg.setAttribute('width',W);bg.setAttribute('height',H);bg.setAttribute('fill','#fbfdff');
+  clone.insertBefore(bg,clone.firstChild);
+  return '<?xml version="1.0" encoding="UTF-8"?>\n'+new XMLSerializer().serializeToString(clone);
+}
+document.getElementById('dlsvg').onclick=()=>{
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(new Blob([svgSource()],{type:'image/svg+xml'}));
+  a.download='enhanced_thematic_map.svg'; a.click();
+};
+document.getElementById('dlpng').onclick=()=>{
+  const img=new Image();
+  img.onload=()=>{
+    const cv=document.createElement('canvas'); cv.width=W*2; cv.height=H*2;
+    const cx=cv.getContext('2d'); cx.scale(2,2); cx.drawImage(img,0,0,W,H);
+    const a=document.createElement('a');
+    a.href=cv.toDataURL('image/png'); a.download='enhanced_thematic_map.png'; a.click();
+  };
+  img.src='data:image/svg+xml;base64,'+btoa(unescape(encodeURIComponent(svgSource())));
+};
+</script>
+</body>
+</html>
