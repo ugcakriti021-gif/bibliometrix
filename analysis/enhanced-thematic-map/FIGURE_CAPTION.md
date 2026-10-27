@@ -1,4 +1,4 @@
-# Figure caption & methods text — thematic map (strategic diagram)
+# Figure caption & interpretation — thematic map (strategic diagram)
 
 **Files to attach to the paper** (same figure, four formats):
 `thematic_map_figure.png` (300 dpi raster), `thematic_map_figure.tiff`
@@ -16,7 +16,7 @@
 > vertical axis density (development degree: internal cohesion of the theme),
 > each expressed as centred ranks; dashed lines mark the mean of the two
 > indices. Circle area is proportional to the total occurrences of the theme's
-> keywords (legend). Four themes were identified: the **motor theme**
+> keywords. Four themes were identified: the **motor theme**
 > *human–health care quality–humans*, well developed and central to the field;
 > the **niche theme** *mortality–time factor–time factors*, internally
 > developed but peripheral; the **basic theme** *female–male–major clinical
@@ -25,43 +25,67 @@
 > **emerging-or-declining** margin of the field. Analysis followed Cobo et
 > al. (2011) as implemented in the bibliometrix R package.
 
-## Cluster statistics (computed from the 232 documents)
+## Interpretation of the themes
 
-| Theme (top keywords) | Quadrant | Centrality | Density | Keywords in theme | Keyword occurrences |
-|---|---|---:|---:|---:|---:|
-| human; health care quality; humans | Motor | 482.21 | 14.36 | 59 | 2 611 |
-| female; male; major clinical study | Basic | 423.57 | 10.63 | 27 | 1 216 |
-| mortality; time factor; time factors | Niche | 381.81 | 19.08 | 31 | 656 |
-| practice guideline; protocol compliance; clinical practice | Emerging/declining | 146.28 | 7.58 | 10 | 207 |
+**Motor theme — human, health care quality, humans.** The motor theme occupies
+the upper-right quadrant of the strategic diagram, with above-mean centrality
+(482.21) and density (14.36), and is by far the largest theme of the network
+(59 keywords, 2 611 keyword occurrences across the 232 documents). High
+centrality indicates that the theme is strongly linked to all other themes of
+the network, while high density shows that it is internally cohesive and
+conceptually mature. Research framing health-care quality around human
+subjects and patients is therefore both the most developed and the most central
+strand of this literature: the conceptual core that drives and structures the
+whole field, with shared definitions, accumulated evidence and dense internal
+debate. Because motor themes can saturate, periodic re-mapping is advisable to
+monitor whether its density keeps rising and which quality dimensions
+(safety, effectiveness, timeliness, patient experience) carry the theme.
 
-Full per-cluster keyword lists: `clusters_final.csv`.
+**Niche theme — mortality, time factor, time factors.** The niche theme shows
+the highest density of the map (19.08) but below-mean centrality (381.81), with
+31 keywords and 656 occurrences. This signature — strong internal cohesion with
+weak external connection — identifies a specialised sub-field: mortality
+endpoints, follow-up duration and timing of care, i.e. the time-to-event
+methodological toolkit. It is a mature, self-contained specialty with its own
+outcomes and study designs, yet it sits at the periphery of the field's centre
+of gravity, exchanging little with the health-care-quality core. The most
+valuable development for this theme is bridging work that connects its rigorous
+outcome measurement to the motor theme, transferring methodological rigour to
+the core of the field.
 
-## Interpretation paragraphs (for the Results/Discussion)
-
-**Motor theme — human, health care quality, humans.** The largest and most
-central theme: it combines high centrality with high density, i.e. it is both
-strongly connected to the rest of the network and internally cohesive.
-Research framing health-care quality around human subjects/patients
-constitutes the conceptual core that drives and structures this literature.
-
-**Niche theme — mortality, time factor, time factors.** The highest density on
-the map with below-average centrality: a specialised, methodologically mature
-sub-field (mortality endpoints, follow-up time, time-to-event analysis) with
-strong internal cohesion but limited exchange with the core — a well-developed
-yet peripheral specialty.
-
-**Basic theme — female, male, major clinical study.** High centrality with low
-density: transversal demographic and study-design descriptors shared by most
-documents. They function as cross-cutting foundations of the field rather
-than as a coherent sub-literature of their own.
+**Basic theme — female, male, major clinical study.** The basic theme combines
+above-mean centrality (423.57) with low density (10.63) and is the second
+largest theme of the map (27 keywords, 1 216 occurrences). Its keywords are
+transversal descriptors — sex and demographic categories together with the
+study-design tag *major clinical study* — that recur across most documents of
+the corpus, which explains their strong links to every other theme, but that
+do not constitute a coherent theory of their own, which explains the weak
+internal cohesion. Practically, this theme is the shared foundational vocabulary
+of the field rather than an independent research front, and should be read as
+cross-cutting covariates of the literature. Should its density grow in future
+periods, that would signal maturation into an autonomous sub-literature — for
+instance on sex/gender equity in the quality of care.
 
 **Emerging or declining theme — practice guideline, protocol compliance,
-clinical practice.** Low on both dimensions and the smallest theme: the
-implementation-science angle (adherence to guidelines and protocols in routine
-practice) sits at the margin of the field. Longitudinal analysis (thematic
-evolution) is required to determine whether it is an embryonic front or a
-fading topic; if emerging, it marks the most evident opportunity space — the
-gap between recommended and delivered practice.
+clinical practice.** The smallest theme of the map (10 keywords, 207
+occurrences) falls below the mean on both centrality (146.28) and density
+(7.58), placing it at the margin of the field. It captures the
+implementation-science angle — whether routine clinical practice adheres to
+practice guidelines and protocols — and is at present weakly developed and
+weakly connected to the core. A static map cannot separate an embryonic
+research front from a fading topic: longitudinal thematic-evolution analysis is
+required. If its centrality is rising, this theme marks the clearest
+opportunity space of the field — the well-known "care gap" between recommended
+and delivered practice; if it is falling, the topic should be treated as
+background.
+
+**Synthesis.** Taken together, the four themes describe a core–periphery
+structure: a dominant human-centred health-care-quality motor hubs the network;
+a mature methodological niche (mortality and time factors) and a transversal
+descriptor layer (sex and study-design tags) orbit it; and the
+guideline-adherence question — arguably the most consequential for patients —
+still lies outside the core, awaiting either emergence or confirmation of
+decline.
 
 ## Methods sentence (for the Methods section)
 
@@ -77,5 +101,6 @@ gap between recommended and delivered practice.
 
 ## Reproducibility
 
-`python3 build_figure.py <scopus_csv> <out_dir>` regenerates every format and
-`clusters_final.csv` from the raw Scopus export.
+`python3 build_figure.py <scopus_csv> <out_dir>` regenerates every figure
+format and `clusters_final.csv` (per-theme centrality, density, keyword lists
+and occurrence counts) from the raw Scopus export.

@@ -176,14 +176,6 @@ ax.set_yticks([])
 ax.set_xlabel("Relevance degree  (Centrality)", fontsize=10.5, labelpad=7)
 ax.set_ylabel("Development degree  (Density)", fontsize=10.5, labelpad=7)
 ax.set_aspect("equal")
-# size legend, true scale, in the empty mid-left band of the panel
-leg_y = 0.30
-for xo, o in zip([-0.82, -0.60, -0.30], [500, 1500, 2500]):
-    r = rmax * np.sqrt(o / occ.max())
-    ax.add_patch(Circle((xo, leg_y), r, facecolor="none", edgecolor="#8a919b", lw=.8, zorder=3))
-    ax.text(xo, leg_y - r - 0.045, f"{o}", ha="center", va="top", fontsize=7.4, color="#6b7280")
-ax.text(-0.89, leg_y + 0.24, "keyword occurrences", fontsize=7.6, color="#6b7280",
-        ha="left", va="bottom", style="italic")
 fig.tight_layout()
 fig.savefig(f"{OUT}/thematic_map_figure.png", dpi=300, facecolor="white")
 fig.savefig(f"{OUT}/thematic_map_figure.pdf", facecolor="white")
